@@ -7,31 +7,31 @@ locals {
 
 # Retrieve existing, default VPC
 data "aws_vpc" "default_vpc" {
-    id = var.default_vpc_id
+  id = var.default_vpc_id
 }
 
 data "aws_availability_zones" "az" {
   state = "available"
 
   filter {
-    name   = "opt-in-status"
+    name = "opt-in-status"
     values = ["opt-in-not-required"]
   }
 }
 
 resource "aws_subnet" "public" {
-    count = 3
-    vpc_id = data.aws_vpc.default_vpc.id
+  count = 3
+  vpc_id = data.aws_vpc.default_vpc.id
 
-    cidr_block = cidrsubnet(
-        data.aws_vpc.default_vpc.cidr_block,
-        local.NO_BITS_SUBNET_MASK,
-        count.index
-    )
+  cidr_block = cidrsubnet(
+    data.aws_vpc.default_vpc.cidr_block,
+    local.NO_BITS_SUBNET_MASK,
+    count.index
+  )
 
-    availability_zone_id = data.aws_availability_zones.az.zone_ids[count.index]
+  availability_zone_id = data.aws_availability_zones.az.zone_ids[count.index]
 
-    tags = merge(local.common_tags, {
-      Name = format("Public_Subnet-%d", count.index)
-    })
+  tags = merge(local.common_tags, {
+    Name = format("Public_Subnet-%d", count.index)
+  })
 }
