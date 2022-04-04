@@ -14,13 +14,13 @@ data "aws_availability_zones" "az" {
   state = "available"
 
   filter {
-    name = "opt-in-status"
+    name   = "opt-in-status"
     values = ["opt-in-not-required"]
   }
 }
 
 resource "aws_subnet" "public" {
-  count = 3
+  count  = 3
   vpc_id = data.aws_vpc.default_vpc.id
 
   cidr_block = cidrsubnet(
