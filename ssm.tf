@@ -17,3 +17,12 @@ resource "aws_ssm_parameter" "elb_security_group" {
 
   tags = local.common_tags
 }
+
+resource "aws_ssm_parameter" "main_vpc_id" {
+  name        = "/vpc/main"
+  type        = "String"
+  value       = aws_vpc.default_vpc.id
+  description = "The ID of the main VPC holding infrastructure"
+
+  tags = local.common_tags
+}
