@@ -4,9 +4,10 @@ resource "aws_security_group" "lb_security_group" {
 
   ingress {
     description = "Enforce TLS Ingress Only"
-    from_port   = "443"
-    to_port     = "443"
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = local.common_tags
