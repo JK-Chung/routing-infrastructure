@@ -1,5 +1,5 @@
 resource "aws_ssm_parameter" "public_subnet_ids" {
-  name        = "/vpc/public_subnet"
+  name        = "/vpc/public_subnets"
   type        = "String"
   value       = join(",", [for p in aws_subnet.public : p.id])
   description = "A comma-separated list of the IDs of all public subnets"
