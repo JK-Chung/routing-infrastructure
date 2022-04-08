@@ -1,10 +1,8 @@
 resource "aws_ssm_parameter" "public_subnet_ids" {
-  count = length(aws_subnet.public)
-
-  name        = format("/vpc/public_subnet/%d", count.index)
+  name        = "/vpc/public_subnet"
   type        = "String"
-  value       = aws_subnet.public[count.index].id
-  description = "An ID of one of the public subnets"
+  value       = join(",", [for p in aws_subnet.public : p.id])
+  description = "A comma-separated list of the IDs of all public subnets"
 
   tags = local.common_tags
 }
@@ -21,7 +19,7 @@ resource "aws_ssm_parameter" "elb_security_group" {
 resource "aws_ssm_parameter" "main_vpc_id" {
   name        = "/vpc/main"
   type        = "String"
-  value       = aws_vpc.default_vpc.id
+  value       = data.aws_vpc.default_vpc.id
   description = "The ID of the main VPC holding infrastructure"
 
   tags = local.common_tags
