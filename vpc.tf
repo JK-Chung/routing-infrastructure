@@ -7,7 +7,7 @@ locals {
 
 # Retrieve existing, default VPC
 data "aws_vpc" "default_vpc" {
-  id = var.default_vpc_id
+  default = true
 }
 
 data "aws_availability_zones" "az" {
