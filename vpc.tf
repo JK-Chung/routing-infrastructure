@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
 
   availability_zone_id = data.aws_availability_zones.az.zone_ids[count.index]
 
-  tags = merge(local.common_tags, {
+  tags = {
     Name = format("Public_Subnet-%d", count.index)
-  })
+  }
 }

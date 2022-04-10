@@ -3,8 +3,6 @@ resource "aws_ssm_parameter" "public_subnet_ids" {
   type        = "StringList"
   value       = join(",", [for p in aws_subnet.public : p.id])
   description = "A comma-separated list of the IDs of all public subnets"
-
-  tags = local.common_tags
 }
 
 resource "aws_ssm_parameter" "elb_security_group" {
@@ -12,8 +10,6 @@ resource "aws_ssm_parameter" "elb_security_group" {
   type        = "String"
   value       = aws_security_group.lb_security_group.id
   description = format("The security group protecting the %s", aws_lb.common_lb.name)
-
-  tags = local.common_tags
 }
 
 resource "aws_ssm_parameter" "main_vpc_id" {
@@ -21,6 +17,4 @@ resource "aws_ssm_parameter" "main_vpc_id" {
   type        = "String"
   value       = data.aws_vpc.default_vpc.id
   description = "The ID of the main VPC holding infrastructure"
-
-  tags = local.common_tags
 }

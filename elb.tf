@@ -7,6 +7,4 @@ resource "aws_lb" "common_lb" {
 
   internal                   = false
   enable_deletion_protection = "true"
-
-  tags = local.common_tags
 }

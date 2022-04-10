@@ -9,6 +9,4 @@ resource "aws_security_group" "lb_security_group" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = local.common_tags
 }
