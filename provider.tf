@@ -22,8 +22,10 @@ provider "aws" {
   region = "eu-west-1"
 
   default_tags {
-    application = "all_projects"
-    managed_by  = "terraform"
-    repo        = "routing-infrastructure"
+    tags = {
+      project = "all_projects"
+      managed_by  = "terraform"
+      repo        = "routing-infrastructure"
+    }
   }
 }
