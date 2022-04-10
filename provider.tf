@@ -25,6 +25,7 @@ provider "aws" {
     tags = {
       project    = "all_projects"
       managed_by = "terraform"
+      github_org = "shared-infrastructure"
       repo       = "routing-infrastructure"
     }
   }
