@@ -11,7 +11,7 @@ terraform {
 
   # use Terraform Cloud as state backend
   cloud {
-    organization = "shared-infrastructure"
+    organization = "jkc-${var.environment}"
     workspaces {
       name = "routing-infrastructure"
     }
