@@ -12,8 +12,6 @@ terraform {
   # use Terraform Cloud as state backend
   cloud {
     organization = "jkc-projects"
-    workspaces {
-    }
   }
 }
 
