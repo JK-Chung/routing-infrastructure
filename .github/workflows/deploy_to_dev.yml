@@ -8,6 +8,8 @@ jobs:
     name: 'Deploy to Development'
     runs-on: ubuntu-latest
     environment: development
+    env:
+      TF_WORKSPACE: routing-infrastructure-dev
 
     defaults:
       run:

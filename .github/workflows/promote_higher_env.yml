@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     needs: is-terraform-code-formatted
+    env:
+      TF_WORKSPACE: routing-infrastructure-stage
 
     defaults:
       run:
@@ -71,6 +73,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     needs: require-approval-for-prod-deployment
+    env:
+      TF_WORKSPACE: routing-infrastructure-stage
 
     steps:
     - name: Checkout
@@ -94,6 +98,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     needs: require-approval-for-prod-deployment
+    env:
+      TF_WORKSPACE: routing-infrastructure-prod
 
     defaults:
       run:
