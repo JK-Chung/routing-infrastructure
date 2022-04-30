@@ -1,7 +1,8 @@
-name: 'Promote Deployment to higher environments'
+name: 'Deploy to Development'
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   deploy-to-development:
