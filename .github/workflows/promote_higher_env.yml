@@ -60,7 +60,7 @@ jobs:
       run: terraform apply -auto-approve
 
   require-approval-for-prod-deployment:
-    name: 'Validate Stage Env (MANUAL APPROVAL REQUIRED)'
+    name: 'Manually Validate Stage Environment'
     runs-on: ubuntu-latest
     environment: manual-approval-for-prod
     needs: deploy-to-staging
