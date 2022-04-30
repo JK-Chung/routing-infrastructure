@@ -6,5 +6,5 @@ resource "aws_lb" "common_lb" {
   subnets         = [for s in aws_subnet.public : s.id]
 
   internal                   = false
-  enable_deletion_protection = "true"
+  enable_deletion_protection = var.environment == "stage" ? "false" : "true"
 }
