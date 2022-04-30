@@ -1,0 +1,114 @@
+name: 'Promote Deployment to higher environments'
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  is-terraform-code-formatted:
+    name: 'Is Terraform Code Correctly Formatted?'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: main
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Format
+      run: terraform fmt -check
+
+
+  deploy-to-staging:
+    name: 'Deploy Infrastructure to Staging'
+    runs-on: ubuntu-latest
+    environment: staging
+    needs: is-terraform-code-formatted
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: main
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+
+  require-approval-for-prod-deployment:
+    name: 'Validate Stage Env (MANUAL APPROVAL REQUIRED)'
+    environment: manual-approval-for-prod
+    needs: deploy-to-staging
+
+  tear-down-staging:
+    name: 'Tear Down Infrastructure on Staging'
+    runs-on: ubuntu-latest
+    environment: staging
+    needs: require-approval-for-prod-deployment
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: main
+        
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Destroy
+      run: terraform destroy -auto-approve
+
+  deploy-to-production:
+    name: 'Deploy to Production'
+    runs-on: ubuntu-latest
+    environment: production
+    needs: require-approval-for-prod-deployment
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
