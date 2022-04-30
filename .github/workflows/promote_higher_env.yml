@@ -61,6 +61,7 @@ jobs:
 
   require-approval-for-prod-deployment:
     name: 'Validate Stage Env (MANUAL APPROVAL REQUIRED)'
+    runs-on: ubuntu-latest
     environment: manual-approval-for-prod
     needs: deploy-to-staging
 
