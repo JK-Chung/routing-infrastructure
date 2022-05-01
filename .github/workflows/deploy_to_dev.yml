@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      TF_WORKSPACE: routing-infrastructure-dev
+      TF_WORKSPACE: cross-project--routing-infrastructure-dev
 
     defaults:
       run:

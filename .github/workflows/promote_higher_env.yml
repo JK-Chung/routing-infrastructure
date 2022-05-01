@@ -33,7 +33,7 @@ jobs:
     environment: staging
     needs: is-terraform-code-formatted
     env:
-      TF_WORKSPACE: routing-infrastructure-stage
+      TF_WORKSPACE: cross-project--routing-infrastructure-stage
 
     defaults:
       run:
@@ -75,7 +75,7 @@ jobs:
     environment: staging
     needs: require-approval-for-prod-deployment
     env:
-      TF_WORKSPACE: routing-infrastructure-stage
+      TF_WORKSPACE: cross-project--routing-infrastructure-stage
 
     steps:
     - name: Checkout
@@ -100,7 +100,7 @@ jobs:
     environment: production
     needs: require-approval-for-prod-deployment
     env:
-      TF_WORKSPACE: routing-infrastructure-prod
+      TF_WORKSPACE: cross-project--routing-infrastructure-prod
 
     defaults:
       run:
