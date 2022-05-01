@@ -7,7 +7,7 @@ on:
 
 jobs:
   is-terraform-code-formatted:
-    name: 'Is Terraform Code Correctly Formatted?'
+    name: 'Check Code Format'
     runs-on: ubuntu-latest
 
     defaults:
@@ -28,7 +28,7 @@ jobs:
 
 
   deploy-to-staging:
-    name: 'Deploy Infrastructure to Staging'
+    name: 'Deploy to Staging'
     runs-on: ubuntu-latest
     environment: staging
     needs: is-terraform-code-formatted
@@ -60,7 +60,7 @@ jobs:
       run: terraform apply -auto-approve
 
   require-approval-for-prod-deployment:
-    name: 'Manually Validate Stage Environment'
+    name: 'Validate Staging: Authorise PROD Deployment'
     runs-on: ubuntu-latest
     environment: manual-approval-for-prod
     needs: deploy-to-staging
@@ -70,7 +70,7 @@ jobs:
       run: echo 'Manual approval for PROD deployment has been granted'
 
   tear-down-staging:
-    name: 'Tear Down Infrastructure on Staging'
+    name: 'Tear Down Staging'
     runs-on: ubuntu-latest
     environment: staging
     needs: require-approval-for-prod-deployment
