@@ -2,7 +2,6 @@ name: 'Deploy to Development'
 
 on:
   push:
-  workflow_dispatch:
 
 jobs:
   deploy-to-development:
