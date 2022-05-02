@@ -23,10 +23,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      project    = "all_projects"
-      managed_by = "terraform"
-      github_org = "shared-infrastructure"
-      repo       = "routing-infrastructure"
+      project     = "all_projects"
+      managed_by  = "terraform"
+      github_repo = "cross-project.routing-infrastructure"
     }
   }
 }
