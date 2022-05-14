@@ -5,6 +5,14 @@ resource "aws_ssm_parameter" "public_subnet_ids" {
   description = "A comma-separated list of the IDs of all public subnets"
 }
 
+resource "aws_ssm_parameter" "application_target_groups" {
+  for_each    = { for a in local.applications : a.fully_qualified_name => a }
+  name        = format("/elb/application-target-group/%s/%s", each.value.project, each.value.application)
+  type        = "String"
+  value       = aws_lb_target_group.application[each.key].arn
+  description = format("A target-group created for the application: %s", each.key)
+}
+
 resource "aws_ssm_parameter" "elb_security_group" {
   name        = format("/sg/%s", aws_lb.common_lb.name)
   type        = "String"

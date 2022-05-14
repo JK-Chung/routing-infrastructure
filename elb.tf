@@ -8,3 +8,25 @@ resource "aws_lb" "common_lb" {
   internal                   = false
   enable_deletion_protection = var.environment == "stage" ? "false" : "true"
 }
+
+resource "aws_lb_target_group" "applications" {
+  for_each = { for a in local.applications : a.fully_qualified_name => a }
+  name     = format("%s--%s", a.project, a.application)
+  port     = 8080
+  protocol = "HTTP"
+  vpc_id   = data.aws_vpc.default_vpc.id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 3
+    unhealthy_threshold = 2
+    interval            = 30
+    timeout             = 5
+
+    path     = "health"
+    matcher  = "200"
+    protocol = "HTTP"
+    port     = "traffic-port"
+
+  }
+}
