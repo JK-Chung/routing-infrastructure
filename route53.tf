@@ -11,6 +11,11 @@ resource "aws_route53_record" "for_tls_verification" {
     "${r.domain_name}${r.name}${r.record}" => r
   }
 
+  # depends on required as this resource is referenced in the for_each
+  depends_on = [
+    aws_acm_certificate.routable_applications
+  ]
+
   allow_overwrite = true
   name            = each.value.name
   records         = [each.value.record]
