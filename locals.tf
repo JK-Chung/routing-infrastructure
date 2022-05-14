@@ -1,4 +1,6 @@
 locals {
+  # The code has been set up to automatically generate the target-groups, ALB listeners, TLS certificates, Route53 records for each element in this list
+  # Whenever you want to onboard a new publically-routable project with a domain-name, you add onto this list  
   routable_applications = [for a in [
     {
       prod_domain_name         = "api.small.domains"
