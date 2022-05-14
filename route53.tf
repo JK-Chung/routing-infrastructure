@@ -5,8 +5,10 @@ resource "aws_route53_zone" "routable_applications" {
 }
 
 resource "aws_route53_record" "for_tls_verification" {
-  for_each = [for domain_name, records in local.all_dns_records_for_tls_validation : records
-  ]
+  for_each = { for record
+    in flatten([for domain_name, records in local.all_dns_records_for_tls_validation : records]) :
+    record => record
+  }
 
   allow_overwrite = true
   name            = each.value.name
