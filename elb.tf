@@ -10,7 +10,7 @@ resource "aws_lb" "common_lb" {
 }
 
 resource "aws_lb_target_group" "applications" {
-  for_each    = { for a in local.applications : a.fully_qualified_name => a }
+  for_each    = { for a in local.routable_applications : a.domain_name => a }
   name        = format("%s--%s", each.value.project, each.value.application)
   port        = 8080
   protocol    = "HTTP"
@@ -29,5 +29,40 @@ resource "aws_lb_target_group" "applications" {
     protocol = "HTTP"
     port     = "traffic-port"
 
+  }
+}
+
+resource "aws_lb_listener" "applications" {
+  for_each          = { for a in local.routable_applications : a.domain_name => a }
+  load_balancer_arn = aws_lb.common_lb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Bad Gateway"
+      status_code  = "502"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "applications" {
+  for_each     = { for a in local.routable_applications : a.domain_name => a }
+  listener_arn = aws_lb_listener.applications[each.key].arn
+  priority     = 1
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.applications[each.key].arn
+  }
+
+  condition {
+    host_header {
+      values = [each.key]
+    }
   }
 }
