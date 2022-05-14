@@ -7,7 +7,7 @@ resource "aws_ssm_parameter" "public_subnet_ids" {
 
 resource "aws_ssm_parameter" "application_target_groups" {
   for_each    = { for a in local.applications : a.fully_qualified_name => a }
-  name        = format("/elb/application-target-group/%s/%s", each.value.project, each.value.application)
+  name        = format("/%s/%s/elb-target-group", each.value.project, each.value.application)
   type        = "String"
   value       = aws_lb_target_group.application[each.key].arn
   description = format("A target-group created for the application: %s", each.key)

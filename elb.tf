@@ -11,7 +11,7 @@ resource "aws_lb" "common_lb" {
 
 resource "aws_lb_target_group" "applications" {
   for_each = { for a in local.applications : a.fully_qualified_name => a }
-  name     = format("%s--%s", a.project, a.application)
+  name     = format("%s--%s", each.value.project, each.value.application)
   port     = 8080
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default_vpc.id
