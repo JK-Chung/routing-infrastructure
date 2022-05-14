@@ -10,12 +10,12 @@ resource "aws_lb" "common_lb" {
 }
 
 resource "aws_lb_target_group" "applications" {
-  for_each = { for a in local.applications : a.fully_qualified_name => a }
-  name     = format("%s--%s", each.value.project, each.value.application)
-  port     = 8080
-  protocol = "HTTP"
+  for_each    = { for a in local.applications : a.fully_qualified_name => a }
+  name        = format("%s--%s", each.value.project, each.value.application)
+  port        = 8080
+  protocol    = "HTTP"
   target_type = each.value.target_group_target_type
-  vpc_id   = data.aws_vpc.default_vpc.id
+  vpc_id      = data.aws_vpc.default_vpc.id
 
   health_check {
     enabled             = true
