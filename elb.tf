@@ -9,7 +9,7 @@ resource "aws_lb" "common_lb" {
   enable_deletion_protection = var.environment == "stage" ? "false" : "true"
 }
 
-resource "aws_lb_target_group" "applications" {
+resource "aws_lb_target_group" "routable_applications" {
   for_each    = { for a in local.routable_applications : a.domain_name => a }
   name        = format("%s--%s", each.value.project, each.value.application)
   port        = 8080
@@ -32,7 +32,7 @@ resource "aws_lb_target_group" "applications" {
   }
 }
 
-resource "aws_lb_listener" "applications" {
+resource "aws_lb_listener" "routable_applications" {
   for_each          = { for a in local.routable_applications : a.domain_name => a }
   load_balancer_arn = aws_lb.common_lb.arn
   port              = "443"
@@ -50,14 +50,14 @@ resource "aws_lb_listener" "applications" {
   }
 }
 
-resource "aws_lb_listener_rule" "applications" {
+resource "aws_lb_listener_rule" "routable_applications" {
   for_each     = { for a in local.routable_applications : a.domain_name => a }
-  listener_arn = aws_lb_listener.applications[each.key].arn
+  listener_arn = aws_lb_listener.routable_applications[each.key].arn
   priority     = 1
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.applications[each.key].arn
+    target_group_arn = aws_lb_target_group.routable_applications[each.key].arn
   }
 
   condition {
@@ -65,4 +65,10 @@ resource "aws_lb_listener_rule" "applications" {
       values = [each.key]
     }
   }
+}
+
+resource "aws_lb_listener_certificate" "routable_applications" {
+  for_each        = { for a in local.routable_applications : a.domain_name => a }
+  listener_arn    = aws_lb_listener.routable_applications[each.key].arn
+  certificate_arn = aws_acm_certificate_validation.routable_applications[each.key].certificate_arn
 }
