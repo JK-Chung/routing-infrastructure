@@ -6,9 +6,10 @@ locals {
     }
     ] :
     {
-      fully_qualified_name = "${a.project}.${a.application}"
-      project              = a.project
-      application          = a.application
+      fully_qualified_name     = "${a.project}.${a.application}"
+      project                  = a.project
+      application              = a.application
+      target_group_target_type = "ip"
     }
   ]
 }
