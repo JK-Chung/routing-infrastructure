@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "applications" {
     interval            = 30
     timeout             = 5
 
-    path     = "health"
+    path     = "/health"
     matcher  = "200"
     protocol = "HTTP"
     port     = "traffic-port"
