@@ -5,9 +5,10 @@ resource "aws_route53_zone" "routable_applications" {
 }
 
 resource "aws_route53_record" "for_tls_verification" {
-  for_each = { for record
+  # Terraform's for_each doesn't accept tuples or lists so I need to implement this weird, roundabout code to turn it into a map
+  for_each = { for r
     in flatten([for domain_name, records in local.all_dns_records_for_tls_validation : records]) :
-    record => record
+    "${r.domain_name}${r.name}${r.record}" => r
   }
 
   allow_overwrite = true
