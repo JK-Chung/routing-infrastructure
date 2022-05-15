@@ -5,7 +5,7 @@ resource "aws_route53_zone" "routable_applications" {
 }
 
 resource "aws_route53_record" "for_tls_verification" {
-  for_each = local.all_dns_records_for_tls_validation
+  for_each = { for r in local.all_dns_records_for_tls_validation : "${r.domain_name}${r.resource_record_name}" => r }
 
   allow_overwrite = true
   name            = each.value.resource_record_name
