@@ -5,11 +5,7 @@ resource "aws_route53_zone" "routable_applications" {
 }
 
 resource "aws_route53_record" "for_tls_verification" {
-  for_each = { for dvo 
-    in flatten([for domain_name, acm in aws_acm_certificate.routable_applications : acm.domain_validation_options]) :
-    # creating a unique key based on domain name and record name
-    "${dvo.domain_name}${dvo.resource_record_name}" => dvo
-  }
+  for_each = local.all_dns_records_for_tls_validation
 
   allow_overwrite = true
   name            = each.value.resource_record_name
