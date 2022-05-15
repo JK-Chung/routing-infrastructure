@@ -16,3 +16,12 @@ resource "aws_acm_certificate_validation" "routable_applications" {
     if contains(local.all_dns_records_for_tls_validation[each.key][*].name, record.name)
   ]
 }
+
+resource "aws_acm_certificate_validation" "routable_applications" {
+  for_each        = aws_acm_certificate.routable_applications
+  certificate_arn = each.value.arn
+  validation_record_fqdns = [
+    for record in aws_route53_record.for_tls_verification : record.fqdn
+    if contains(each.value.domain_validation_options[*].name, record.name)
+  ]
+}
