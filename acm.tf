@@ -9,15 +9,6 @@ resource "aws_acm_certificate" "routable_applications" {
 }
 
 resource "aws_acm_certificate_validation" "routable_applications" {
-  for_each        = { for a in local.routable_applications : a.domain_name => a }
-  certificate_arn = aws_acm_certificate.routable_applications[each.key].arn
-  validation_record_fqdns = [
-    for record in aws_route53_record.for_tls_verification : record.fqdn
-    if contains(local.all_dns_records_for_tls_validation[each.key][*].name, record.name)
-  ]
-}
-
-resource "aws_acm_certificate_validation" "routable_applications" {
   for_each        = aws_acm_certificate.routable_applications
   certificate_arn = each.value.arn
   validation_record_fqdns = [
