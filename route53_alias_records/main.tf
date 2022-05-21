@@ -6,7 +6,8 @@ resource "aws_route53_record" "subdomain_alias_records" {
   zone_id = var.route53_zone_id
 
   alias {
-    name    = var.to_alias_to.name
-    zone_id = var.to_alias_to.zone_id
+    name                   = var.to_alias_to.name
+    zone_id                = var.to_alias_to.zone_id
+    evaluate_target_health = true
   }
 }
