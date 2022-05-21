@@ -1,5 +1,5 @@
 locals {
-  route53_zone_names = list([ for z in distinct(local.elb_routable_apps[*].route53_zone_name) : z ])
+  route53_zone_names = toset([ for z in distinct(local.elb_routable_apps[*].route53_zone_name) : z ])
 
   # The code has been set up to automatically generate the target-groups, ALB listeners, TLS certificates, Route53 records for each element in this list
   # Whenever you want to onboard a new publically-routable project with a domain-name (THAT IS ROUTED THROUGH THE COMMON ALB), you add onto this list  
