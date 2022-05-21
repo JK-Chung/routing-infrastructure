@@ -14,7 +14,7 @@ locals {
     }
     ] :
     {
-      fqdn                     = format("%s%s%s", "${subdomain}.", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
+      fqdn                     = format("%s%s%s", "${a.subdomain}.", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
       subdomain                = a.subdomain
       route53_zone_name        = format("%s%s", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
       project                  = a.project
