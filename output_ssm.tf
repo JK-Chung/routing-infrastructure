@@ -6,10 +6,10 @@ resource "aws_ssm_parameter" "public_subnet_ids" {
 }
 
 resource "aws_ssm_parameter" "application_target_groups" {
-  for_each    = { for a in local.routable_applications : a.domain_name => a }
+  for_each    = { for a in local.elb_routable_apps : a.fqdn => a }
   name        = format("/%s/%s/elb-target-group", each.value.project, each.value.application)
   type        = "String"
-  value       = aws_lb_target_group.routable_applications[each.key].arn
+  value       = aws_lb_target_group.elb_routable_apps[each.key].arn
   description = format("A target-group created for the application with (non-prefixed) domain-name: %s", each.key)
 }
 

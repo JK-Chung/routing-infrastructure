@@ -1,16 +1,18 @@
-
-resource "aws_route53_zone" "routable_applications" {
-  for_each = { for a in local.routable_applications : a.domain_name => a }
-  name     = each.value.domain_name
+resource "aws_route53_zone" "projects" {
+  for_each = local.route53_zone_names
+  name     = each.value
 }
 
-resource "aws_route53_record" "for_tls_verification" {
-  for_each = { for r in local.all_dns_records_for_tls_validation : "${r.domain_name}${r.resource_record_name}" => r }
+module "route53_alias_records" {
+  for_each = local.route53_zone_names
+  source   = "./route53_alias_records"
 
-  allow_overwrite = true
-  name            = each.value.resource_record_name
-  records         = [each.value.resource_record_value]
-  ttl             = 60
-  type            = each.value.resource_record_type
-  zone_id         = aws_route53_zone.routable_applications[each.value.domain_name].zone_id
+  route53_zone_name = each.value
+  subdomains        = [for r in local.elb_routable_apps : r.subdomain if r.route53_zone_name == each.value]
+  route53_zone_id   = aws_route53_zone.projects[each.value].zone_id
+
+  to_alias_to = {
+    name    = aws_lb.common_lb.dns_name
+    zone_id = aws_lb.common_lb.zone_id
+  }
 }
