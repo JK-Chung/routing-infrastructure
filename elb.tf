@@ -35,9 +35,10 @@ resource "aws_lb_target_group" "elb_routable_apps" {
 resource "aws_lb_listener" "elb_routable_apps" {
   for_each          = { for a in local.elb_routable_apps : a.fqdn => a }
   load_balancer_arn = aws_lb.common_lb.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
+  
+  port              = "80"
+  protocol          = "HTTP"
+  # TODO use HTTPS ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
 
   default_action {
     type = "fixed-response"
