@@ -4,7 +4,7 @@ variable "route53_zone_name" {
 }
 
 variable "subdomains" {
-  type        = list(string)
+  type        = set(string)
   description = "A list of subdomains to register under the Route 53 Zone"
 }
 
