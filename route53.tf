@@ -4,7 +4,7 @@ resource "aws_route53_zone" "projects" {
 }
 
 module "route53_cross_account" {
-  for_each = local.env_root_domain
+  for_each = var.environment == "prod" ? toset([]) : local.env_root_domain
   providers = {
     aws = aws.networking-infrastructure
   }
