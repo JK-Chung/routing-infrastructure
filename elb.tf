@@ -39,10 +39,16 @@ module "listener_rules_for_ip_targets" {
 }
 
 module "all_projects_tls_certificates" {
-  for_each = local.elb_routable_apps
+  for_each = { for a in local.elb_routable_apps: a.fqdn => a }
   source   = "./tls_for_alb_listeners"
 
   fqdn            = each.value.fqdn
   route53_zone_id = aws_route53_zone.projects[each.value.env_root_domain].zone_id
   listener_arn    = aws_lb_listener.listener.arn
+
+  # this module is dependent on DNS validation. hence, DNS resources must be set up first
+  depends_on = [
+    aws_route53_zone.projects,
+    module.route53_cross_account
+  ]
 }
