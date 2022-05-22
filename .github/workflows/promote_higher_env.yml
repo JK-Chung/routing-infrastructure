@@ -9,10 +9,6 @@ jobs:
   is-terraform-code-formatted:
     name: 'Check Code Format'
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash
     
     steps:
     - name: Checkout
@@ -24,87 +20,16 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Format
-      run: terraform fmt -check
+      run: terraform fmt -recursive -check
 
-
-  deploy-to-staging:
-    name: 'Deploy to Staging'
-    runs-on: ubuntu-latest
-    environment: staging
-    needs: is-terraform-code-formatted
-    env:
-      TF_WORKSPACE: cross-project--routing-infrastructure-stage
-
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        ref: main
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Plan
-      run: terraform plan
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
-
-  require-approval-for-prod-deployment:
-    name: 'Validate Staging: Authorise PROD Deployment'
-    runs-on: ubuntu-latest
-    environment: manual-approval-for-prod
-    needs: deploy-to-staging
-
-    steps:
-    - name: Manual Approval Confirmed
-      run: echo 'Manual approval for PROD deployment has been granted'
-
-  tear-down-staging:
-    name: 'Tear Down Staging'
-    runs-on: ubuntu-latest
-    environment: staging
-    needs: require-approval-for-prod-deployment
-    env:
-      TF_WORKSPACE: cross-project--routing-infrastructure-stage
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        ref: main
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Destroy
-      run: terraform destroy -auto-approve
 
   deploy-to-production:
     name: 'Deploy to Production'
     runs-on: ubuntu-latest
     environment: production
-    needs: require-approval-for-prod-deployment
+    needs: is-terraform-code-formatted
     env:
       TF_WORKSPACE: cross-project--routing-infrastructure-prod
-
-    defaults:
-      run:
-        shell: bash
 
     steps:
     - name: Checkout

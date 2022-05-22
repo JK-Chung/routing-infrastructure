@@ -11,10 +11,6 @@ jobs:
     env:
       TF_WORKSPACE: cross-project--routing-infrastructure-dev
 
-    defaults:
-      run:
-        shell: bash
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -29,6 +25,9 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan
+
+    - name: Terraform Validate
+      run: terraform validate
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
