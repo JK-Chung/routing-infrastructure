@@ -9,5 +9,5 @@ resource "aws_acm_certificate" "tls" {
 
 resource "aws_acm_certificate_validation" "validation" {
   certificate_arn         = aws_acm_certificate.tls.arn
-  validation_record_fqdns = [ for r in aws_route53_record.tls_verification : r.fqdn ]
+  validation_record_fqdns = [for r in aws_route53_record.tls_verification : r.fqdn]
 }

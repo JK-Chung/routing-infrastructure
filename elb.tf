@@ -9,12 +9,30 @@ resource "aws_lb" "common_lb" {
   enable_deletion_protection = true
 }
 
-resource "aws_lb_listener" "listener" {
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.common_lb.arn
+
+  port     = "80"
+  protocol = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.common_lb.arn
 
   port       = "443"
   protocol   = "HTTPS"
   ssl_policy = "ELBSecurityPolicy-2016-08" # recommended by AWS
+  certificate_arn = module.dummy_default_certificate.arn
 
   default_action {
     type = "fixed-response"
@@ -35,20 +53,43 @@ module "listener_rules_for_ip_targets" {
   project          = each.value.project
   application      = each.value.application
   vpc_id           = data.aws_vpc.default_vpc.id
-  alb_listener_arn = aws_lb_listener.listener.arn
+  alb_listener_arn = aws_lb_listener.https.arn
 }
 
 module "all_projects_tls_certificates" {
   for_each = { for a in local.elb_routable_apps : a.fqdn => a }
-  source   = "./tls_for_alb_listeners"
+  source   = "./validated_tls_cert"
 
   fqdn            = each.value.fqdn
   route53_zone_id = aws_route53_zone.projects[each.value.env_root_domain].zone_id
-  listener_arn    = aws_lb_listener.listener.arn
 
   # this module is dependent on DNS validation. hence, DNS resources must be set up first
   depends_on = [
     aws_route53_zone.projects,
     module.route53_cross_account
   ]
+}
+
+/**
+When making a HTTPS listener on an ALB, you must specify a default TLS cert in case a HTTP request's host does not match
+any of the attached certificates, so I'm forced to make this dummy TLS cert even though this will never get used
+**/
+module "dummy_default_certificate" {
+  source   = "./validated_tls_cert"
+
+  fqdn            = format("dummy-cert.%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")
+  route53_zone_id = aws_route53_zone.projects[format("%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")].zone_id
+  listener_arn    = aws_lb_listener.https.arn
+
+  # this module is dependent on DNS validation. hence, DNS resources must be set up first
+  depends_on = [
+    aws_route53_zone.projects,
+    module.route53_cross_account
+  ]
+}
+
+resource "aws_lb_listener_certificate" "listener_certs" {
+  for_each        = toset([for c in module.all_projects_tls_certificates : c.certificate_arn])
+  listener_arn    = aws_lb_listener.https.arn
+  certificate_arn = each.value
 }
