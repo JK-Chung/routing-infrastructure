@@ -7,7 +7,7 @@ variable "route53_zone_name" {
 variable "subdomains" {
   type        = set(string)
   description = "A set of subdomains to register under the Route 53 Zone"
-  default     = toset([])
+  default     = []
 }
 
 variable "route53_zone_id" {
