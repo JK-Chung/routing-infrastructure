@@ -6,7 +6,7 @@ resource "aws_route53_zone" "projects" {
 module "route53_cross_account" {
   for_each = local.env_root_domain
   providers = {
-    aws = aws.networking_infrastructure
+    aws = aws.networking-infrastructure
   }
 
   source          = "./route53_cross_account"
