@@ -32,7 +32,7 @@ resource "aws_lb_listener" "https" {
   port            = "443"
   protocol        = "HTTPS"
   ssl_policy      = "ELBSecurityPolicy-2016-08" # recommended by AWS
-  certificate_arn = module.dummy_default_certificate.arn
+  certificate_arn = module.dummy_default_certificate.tls_cert.arn
 
   default_action {
     type = "fixed-response"
@@ -77,8 +77,8 @@ any of the attached certificates, so I'm forced to make this dummy TLS cert even
 module "dummy_default_certificate" {
   source = "./validated_tls_cert"
 
-  fqdn            = format("dummy-cert.%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")
-  route53_zone_id = aws_route53_zone.projects[format("%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")].zone_id
+  fqdn            = format("dummy-cert.%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")
+  route53_zone_id = aws_route53_zone.projects[format("%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")].zone_id
 
   # this module is dependent on DNS validation. hence, DNS resources must be set up first
   depends_on = [
@@ -88,7 +88,7 @@ module "dummy_default_certificate" {
 }
 
 resource "aws_lb_listener_certificate" "listener_certs" {
-  for_each        = toset([for c in module.all_projects_tls_certificates : c.certificate_arn])
+  for_each        = toset([for c in module.all_projects_tls_certificates : c.tls_cert])
   listener_arn    = aws_lb_listener.https.arn
   certificate_arn = each.value
 }

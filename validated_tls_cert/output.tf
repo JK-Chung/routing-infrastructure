@@ -1,4 +1,4 @@
-output "certificate_arn" {
-  value       = aws_acm_certificate.tls.arn
-  description = "The ARN of the TLS certificate created"
+output "tls_cert" {
+  value       = aws_acm_certificate.tls
+  description = "The ACM certificate created for TLS"
 }
