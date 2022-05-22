@@ -39,7 +39,7 @@ module "listener_rules_for_ip_targets" {
 }
 
 module "all_projects_tls_certificates" {
-  for_each = { for a in local.elb_routable_apps: a.fqdn => a }
+  for_each = { for a in local.elb_routable_apps : a.fqdn => a }
   source   = "./tls_for_alb_listeners"
 
   fqdn            = each.value.fqdn
