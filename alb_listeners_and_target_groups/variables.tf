@@ -29,7 +29,7 @@ variable "vpc_id" {
   description = "The VPC IP of the ALB"
 }
 
-variable "load_balancer_arn" {
+variable "alb_listener_arn" {
   type        = string
-  description = "The ARN of the ALB that we are creating listeners and target groups for."
+  description = "The ARN of the ALB listener we're using to handle all of our hosts"
 }

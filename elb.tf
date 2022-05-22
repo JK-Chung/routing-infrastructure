@@ -9,6 +9,24 @@ resource "aws_lb" "common_lb" {
   enable_deletion_protection = true
 }
 
+resource "aws_lb_listener" "listener" {
+  load_balancer_arn = aws_lb.common_lb.arn
+
+  port     = "80"
+  protocol = "HTTP"
+  # TODO use HTTPS ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "502: Bad Gateway"
+      status_code  = "502"
+    }
+  }
+}
+
 module "listeners_for_ip_targets" {
   for_each = { for a in local.elb_routable_apps : a.fqdn => a if a.target_group_target_type == "ip" }
   source   = "./alb_listeners_and_target_groups"

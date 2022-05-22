@@ -20,29 +20,8 @@ resource "aws_lb_target_group" "target_group" {
   }
 }
 
-# One listener will be used for all FQDNs (not PER FQDN as it is currently)
-# TODO extract this resource out of this module (and change priority on listener rule)
-resource "aws_lb_listener" "listener" {
-  load_balancer_arn = var.load_balancer_arn
-
-  port     = "80"
-  protocol = "HTTP"
-  # TODO use HTTPS ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
-
-  default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "502: Bad Gateway"
-      status_code  = "502"
-    }
-  }
-}
-
 resource "aws_lb_listener_rule" "listener_forward_rule" {
-  listener_arn = aws_lb_listener.listener.arn
-  priority     = 1
+  listener_arn = var.alb_listener_arn
 
   action {
     type             = "forward"
