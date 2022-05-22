@@ -6,7 +6,7 @@ resource "aws_lb" "common_lb" {
   subnets         = [for s in aws_subnet.public : s.id]
 
   internal                   = false
-  enable_deletion_protection = var.environment == "stage" ? "false" : "true"
+  enable_deletion_protection = true
 }
 
 resource "aws_lb_target_group" "elb_routable_apps" {
@@ -45,7 +45,7 @@ resource "aws_lb_listener" "elb_routable_apps" {
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "Bad Gateway"
+      message_body = "502: Bad Gateway"
       status_code  = "502"
     }
   }
