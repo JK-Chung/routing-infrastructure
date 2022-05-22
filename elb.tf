@@ -88,7 +88,7 @@ module "dummy_default_certificate" {
 }
 
 resource "aws_lb_listener_certificate" "listener_certs" {
-  for_each        = toset([for c in module.all_projects_tls_certificates : c.tls_cert])
+  for_each        = module.all_projects_tls_certificates
   listener_arn    = aws_lb_listener.https.arn
-  certificate_arn = each.value
+  certificate_arn = each.value.tls_cert.arn
 }
