@@ -3,9 +3,9 @@ resource "aws_route53_zone" "projects" {
   name     = each.value
 }
 
-module "route53_alias_records" {
+module "route53_subdomains" {
   for_each = local.route53_zone_names
-  source   = "./route53_alias_records"
+  source   = "./route53_subdomains"
 
   route53_zone_name = each.value
   subdomains        = [for r in local.elb_routable_apps : r.subdomain if r.route53_zone_name == each.value]

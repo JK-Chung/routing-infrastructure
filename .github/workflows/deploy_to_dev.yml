@@ -11,10 +11,6 @@ jobs:
     env:
       TF_WORKSPACE: cross-project--routing-infrastructure-dev
 
-    defaults:
-      run:
-        shell: bash
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
