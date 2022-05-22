@@ -35,5 +35,5 @@ module "listener_rules_for_ip_targets" {
   project          = each.value.project
   application      = each.value.application
   vpc_id           = data.aws_vpc.default_vpc.id
-  alb_listener_arn = aws_lb_listener.listener
+  alb_listener_arn = aws_lb_listener.listener.arn
 }
