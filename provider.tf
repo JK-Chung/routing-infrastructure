@@ -22,10 +22,16 @@ provider "aws" {
   region = "eu-west-1"
 
   default_tags {
-    tags = {
-      project     = "cross-project"
-      managed_by  = "terraform"
-      github_repo = "cross-project.routing-infrastructure"
-    }
+    tags = local.default_tags
+  }
+}
+
+provider "aws" {
+  alias  = "networking-infrastructure"
+  region = "eu-west-1"
+
+
+  default_tags {
+    tags = local.default_tags
   }
 }

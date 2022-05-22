@@ -1,4 +1,4 @@
-variable "route53_zone_name" {
+variable "env_root_domain" {
   type        = string
   description = "The domain name to use with the provided subdomains. This variable can itself be a subdomain (e.g. dev.small.domains). In that case, the subdomains will be prefixed to that value."
 }

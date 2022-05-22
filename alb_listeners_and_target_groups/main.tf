@@ -20,6 +20,8 @@ resource "aws_lb_target_group" "target_group" {
   }
 }
 
+# One listener will be used for all FQDNs (not PER FQDN as it is currently)
+# TODO extract this resource out of this module (and change priority on listener rule)
 resource "aws_lb_listener" "listener" {
   load_balancer_arn = var.load_balancer_arn
 
@@ -59,4 +61,9 @@ resource "aws_ssm_parameter" "target_group" {
   type        = "String"
   value       = aws_lb_target_group.target_group.arn
   description = format("A target-group created for the application: %s--%s", var.project, var.application)
+}
+
+resource "aws_lb_listener_certificate" "example" {
+  listener_arn    = aws_lb_listener.listener.arn
+  certificate_arn = aws_acm_certificate.example.arn
 }

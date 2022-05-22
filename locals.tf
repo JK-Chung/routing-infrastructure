@@ -1,5 +1,5 @@
 locals {
-  route53_zone_names = toset([for z in distinct(local.elb_routable_apps[*].route53_zone_name) : z])
+  env_root_domain = toset([for z in distinct(local.elb_routable_apps[*].env_root_domain) : z])
 
   # The code has been set up to automatically generate the target-groups, ALB listeners, TLS certificates, Route53 records for each element in this list
   # Whenever you want to onboard a new publically-routable project with a domain-name (THAT IS ROUTED THROUGH THE COMMON ALB), you add onto this list  
@@ -16,11 +16,17 @@ locals {
     {
       fqdn                     = format("%s%s%s", "${a.subdomain}.", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
       subdomain                = a.subdomain
-      route53_zone_name        = format("%s%s", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
+      env_root_domain          = format("%s%s", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
       project                  = a.project
       application              = a.application
       target_group_target_type = a.target_group_target_type
     }
   ]
 
+  # to be used in the AWS Provider blocks - do not use directly
+  default_tags = {
+    project     = "cross-project"
+    managed_by  = "terraform"
+    github_repo = "cross-project.routing-infrastructure"
+  }
 }

@@ -1,7 +1,7 @@
 resource "aws_route53_record" "subdomain_alias_records" {
   for_each = var.subdomains
 
-  name    = "${each.value}.${var.route53_zone_name}"
+  name    = "${each.value}.${var.env_root_domain}"
   type    = "A"
   zone_id = var.route53_zone_id
 
