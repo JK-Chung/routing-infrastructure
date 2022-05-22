@@ -3,11 +3,7 @@ terraform {
     aws = {
       source                = "hashicorp/aws"
       version               = "~> 4.8"
-      configuration_aliases = [aws.networking_infrastructure]
+      configuration_aliases = [ aws.aws ]
     }
   }
-}
-
-provider "aws" {
-  alias = "aws"
 }
