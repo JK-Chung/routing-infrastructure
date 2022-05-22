@@ -12,9 +12,9 @@ resource "aws_lb" "common_lb" {
 resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_lb.common_lb.arn
 
-  port     = "80"
-  protocol = "HTTP"
-  # TODO use HTTPS ssl_policy        = "ELBSecurityPolicy-2016-08" # recommended by AWS
+  port       = "443"
+  protocol   = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2016-08" # recommended by AWS
 
   default_action {
     type = "fixed-response"
@@ -36,4 +36,13 @@ module "listener_rules_for_ip_targets" {
   application      = each.value.application
   vpc_id           = data.aws_vpc.default_vpc.id
   alb_listener_arn = aws_lb_listener.listener.arn
+}
+
+module "all_projects_tls_certificates" {
+  for_each = local.elb_routable_apps
+  source   = "./tls_for_alb_listeners"
+
+  fqdn            = each.value.fqdn
+  route53_zone_id = aws_route53_zone.projects[each.value.env_root_domain].zone_id
+  listener_arn    = aws_lb_listener.listener.arn
 }
