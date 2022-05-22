@@ -11,7 +11,7 @@ module "route53_cross_account" {
 
   source          = "./route53_cross_account"
   env_domain_name = each.value
-  apex_domain     = regex("[^\\.]+\\..+$", each.value)
+  apex_domain     = regex("[^\\.]+\\.[^\\.]+$", each.value)
   env_nameservers = aws_route53_zone.projects[each.value].name_servers
 }
 
