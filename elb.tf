@@ -29,9 +29,9 @@ resource "aws_lb_listener" "http" {
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.common_lb.arn
 
-  port       = "443"
-  protocol   = "HTTPS"
-  ssl_policy = "ELBSecurityPolicy-2016-08" # recommended by AWS
+  port            = "443"
+  protocol        = "HTTPS"
+  ssl_policy      = "ELBSecurityPolicy-2016-08" # recommended by AWS
   certificate_arn = module.dummy_default_certificate.arn
 
   default_action {
@@ -75,11 +75,10 @@ When making a HTTPS listener on an ALB, you must specify a default TLS cert in c
 any of the attached certificates, so I'm forced to make this dummy TLS cert even though this will never get used
 **/
 module "dummy_default_certificate" {
-  source   = "./validated_tls_cert"
+  source = "./validated_tls_cert"
 
   fqdn            = format("dummy-cert.%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")
   route53_zone_id = aws_route53_zone.projects[format("%ssmall.domains", var.environment == prod ? "" : "${var.environment}.")].zone_id
-  listener_arn    = aws_lb_listener.https.arn
 
   # this module is dependent on DNS validation. hence, DNS resources must be set up first
   depends_on = [
