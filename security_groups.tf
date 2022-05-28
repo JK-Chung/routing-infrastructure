@@ -18,3 +18,16 @@ resource "aws_security_group" "lb_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "elb_traffic_only_8080" {
+  name        = "Common-Load-Balancer Traffic Only"
+  description = "Security Group restricting network access from the common-load-balancer only (to port 8080)"
+
+  ingress {
+    description     = "Allow Ingress Traffic from ELB only"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb_security_group.id]
+  }
+}
