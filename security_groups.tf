@@ -19,9 +19,9 @@ resource "aws_security_group" "lb_security_group" {
   }
 }
 
-resource "aws_security_group" "elb_traffic_only_8080" {
-  name        = "Common-Load-Balancer Traffic Only"
-  description = "Security Group restricting network access from the common-load-balancer only (to port 8080)"
+resource "aws_security_group" "for_ecs_service_from_elb_traffic_only" {
+  name        = "SG_restrict_ecs_service_access_to_elb_only"
+  description = "Security Group restricting ECS service network access from the common-load-balancer only"
 
   ingress {
     description     = "Allow Ingress Traffic from ELB only"

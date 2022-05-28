@@ -18,3 +18,10 @@ resource "aws_ssm_parameter" "main_vpc_id" {
   value       = data.aws_vpc.default_vpc.id
   description = "The ID of the main VPC holding infrastructure"
 }
+
+resource "aws_ssm_parameter" "sg_id_for_ecs_service" {
+  name        = "/sg/ecs-services/allow-load-balancer-ingress-only"
+  type        = "String"
+  value       = aws_security_group.for_ecs_service_from_elb_traffic_only.id
+  description = "The Security Group ID for ECS Services (port 8080) to allow ingress from common-load-balancer only"
+}
