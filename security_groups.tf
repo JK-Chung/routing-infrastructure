@@ -48,4 +48,12 @@ resource "aws_security_group" "for_ecs_service_from_elb_traffic_only" {
     protocol        = "tcp"
     security_groups = [aws_security_group.lb_security_group.id]
   }
+
+  egress {
+    description = "Allow HTTPS Egress Traffic"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
