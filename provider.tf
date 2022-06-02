@@ -50,3 +50,5 @@ variable "NETWORKING_AWS_SECRET_ACCESS_KEY" {
   description = "The AWS Access Secret Key for Networking-Infrastructure account"
   sensitive   = true
 }
+
+data "aws_region" "current" {}
