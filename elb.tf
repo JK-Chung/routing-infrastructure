@@ -65,8 +65,7 @@ module "all_projects_tls_certificates" {
 
   # this module is dependent on DNS validation. hence, DNS resources must be set up first
   depends_on = [
-    aws_route53_zone.projects,
-    module.route53_cross_account
+    aws_route53_zone.projects
   ]
 }
 
@@ -82,8 +81,7 @@ module "dummy_default_certificate" {
 
   # this module is dependent on DNS validation. hence, DNS resources must be set up first
   depends_on = [
-    aws_route53_zone.projects,
-    module.route53_cross_account
+    aws_route53_zone.projects
   ]
 }
 

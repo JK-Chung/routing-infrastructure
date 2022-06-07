@@ -3,18 +3,6 @@ resource "aws_route53_zone" "projects" {
   name     = each.value
 }
 
-module "route53_cross_account" {
-  for_each = var.environment == "prod" ? toset([]) : local.env_root_domain
-  providers = {
-    aws = aws.networking-infrastructure
-  }
-
-  source          = "./route53_cross_account"
-  env_domain_name = each.value
-  apex_domain     = regex("[^\\.]+\\.[^\\.]+$", each.value)
-  env_nameservers = aws_route53_zone.projects[each.value].name_servers
-}
-
 module "route53_subdomains" {
   for_each = local.env_root_domain
   source   = "./route53_subdomains"
