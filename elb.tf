@@ -61,7 +61,7 @@ module "all_projects_tls_certificates" {
   source   = "./validated_tls_cert"
 
   fqdn            = each.value.fqdn
-  route53_zone_id = aws_ssm_parameter.r53_zoneids[each.value.env_root_domain].value
+  route53_zone_id = data.aws_ssm_parameter.r53_zoneids[each.value.env_root_domain].value
 }
 
 /**
@@ -72,7 +72,7 @@ module "dummy_default_certificate" {
   source = "./validated_tls_cert"
 
   fqdn            = format("dummy-cert.%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")
-  route53_zone_id = aws_ssm_parameter.r53_zoneids[format("%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")].value
+  route53_zone_id = data.aws_ssm_parameter.r53_zoneids[format("%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")].value
 }
 
 resource "aws_lb_listener_certificate" "listener_certs" {

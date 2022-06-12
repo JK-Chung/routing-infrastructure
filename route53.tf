@@ -3,7 +3,7 @@ resource "aws_route53_record" "subdomain_alias_records" {
 
   name    = each.value.fqdn
   type    = "A"
-  zone_id = aws_ssm_parameter.r53_zoneids[each.value.env_root_domain].value
+  zone_id = data.aws_ssm_parameter.r53_zoneids[each.value.env_root_domain].value
 
   alias {
     name                   = aws_lb.common_lb.dns_name
