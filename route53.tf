@@ -1,5 +1,5 @@
 resource "aws_route53_record" "subdomain_alias_records" {
-  for_each = local.elb_routable_apps
+  for_each = { for a in local.elb_routable_apps : a.fqdn => a }
 
   name    = each.value.fqdn
   type    = "A"
