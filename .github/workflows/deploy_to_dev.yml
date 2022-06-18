@@ -26,11 +26,11 @@ jobs:
     - name: Terraform Format
       run: terraform fmt -recursive
 
-    - name: Terraform Plan
-      run: terraform plan
-
     - name: Terraform Validate
       run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan
 
     - name: Terraform Apply
       run: terraform apply -auto-approve

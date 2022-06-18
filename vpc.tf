@@ -35,3 +35,9 @@ resource "aws_subnet" "public" {
     Name = format("Public_Subnet-%d", count.index)
   }
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id          = data.aws_vpc.default_vpc.id
+  service_name    = "com.amazonaws.${data.aws_region.current.name}.dynamodb"
+  route_table_ids = [data.aws_vpc.default_vpc.main_route_table_id]
+}
