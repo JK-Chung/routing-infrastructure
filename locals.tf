@@ -12,10 +12,18 @@ locals {
       project                  = "smalldomains"
       application              = "domain-manager"
       target_group_target_type = "ip"
+    },
+    {
+      apex_domain = "small.domains"
+      subdomain   = ""
+
+      project                  = "smalldomains"
+      application              = "domain-manager"
+      target_group_target_type = "lambda"
     }
     ] :
     {
-      fqdn                     = format("%s%s%s", "${a.subdomain}.", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
+      fqdn                     = format("%s%s%s", a.subdomain == "" ? "" : "${a.subdomain}.", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
       apex_domain              = a.apex_domain
       subdomain                = a.subdomain
       env_root_domain          = format("%s%s", var.environment == "prod" ? "" : "${var.environment}.", a.apex_domain)
