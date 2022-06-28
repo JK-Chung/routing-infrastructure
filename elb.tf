@@ -45,8 +45,8 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-module "listener_rules_for_ip_targets" {
-  for_each = { for a in local.elb_routable_apps : a.fqdn => a if a.target_group_target_type == "ip" }
+module "listener_rules_for_all_targets" {
+  for_each = { for a in local.elb_routable_apps : a.fqdn => a }
   source   = "./alb_listeners_and_target_groups"
 
   fqdn             = each.key
