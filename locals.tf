@@ -18,7 +18,7 @@ locals {
       subdomain   = ""
 
       project                  = "smalldomains"
-      application              = "domain-manager"
+      application              = "forwarder"
       target_group_target_type = "lambda"
     }
     ] :
