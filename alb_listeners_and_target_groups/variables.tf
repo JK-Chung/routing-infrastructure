@@ -16,7 +16,6 @@ variable "application" {
 variable "target_group_target_type" {
   type        = string
   description = "The target type for the created target group"
-  default     = "ip"
 
   validation {
     condition     = contains(["ip", "lambda", "instance"], var.target_group_target_type)

@@ -49,11 +49,12 @@ module "listener_rules_for_ip_targets" {
   for_each = { for a in local.elb_routable_apps : a.fqdn => a }
   source   = "./alb_listeners_and_target_groups"
 
-  fqdn             = each.key
-  project          = each.value.project
-  application      = each.value.application
-  vpc_id           = data.aws_vpc.default_vpc.id
-  alb_listener_arn = aws_lb_listener.https.arn
+  fqdn                     = each.key
+  project                  = each.value.project
+  application              = each.value.application
+  vpc_id                   = data.aws_vpc.default_vpc.id
+  alb_listener_arn         = aws_lb_listener.https.arn
+  target_group_target_type = each.value.target_group_target_type
 }
 
 module "all_projects_tls_certificates" {
