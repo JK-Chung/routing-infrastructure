@@ -7,6 +7,12 @@ resource "aws_lb" "common_lb" {
 
   internal                   = false
   enable_deletion_protection = true
+
+  access_logs {
+    bucket = aws_s3_bucket.access_logs
+    prefix = "common-load-balancer"
+    enabled = true
+  }
 }
 
 resource "aws_lb_listener" "http" {
