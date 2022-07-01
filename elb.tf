@@ -9,7 +9,7 @@ resource "aws_lb" "common_lb" {
   enable_deletion_protection = true
 
   access_logs {
-    bucket  = aws_s3_bucket.access_logs
+    bucket  = aws_s3_bucket.access_logs.id
     prefix  = "common-load-balancer"
     enabled = true
   }
