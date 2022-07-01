@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "access_logs" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "access_logs" {
-  bucket = aws_s3_bucket.access_logs
+  bucket = aws_s3_bucket.access_logs.id
 
   rule {
     id     = "auto-expire"
