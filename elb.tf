@@ -55,6 +55,7 @@ module "listener_rules_for_ip_targets" {
   vpc_id                   = data.aws_vpc.default_vpc.id
   alb_listener_arn         = aws_lb_listener.https.arn
   target_group_target_type = each.value.target_group_target_type
+  health_check_path        = each.health_check_path
 }
 
 module "all_projects_tls_certificates" {

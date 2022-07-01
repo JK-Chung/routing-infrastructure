@@ -11,7 +11,8 @@ locals {
 
       project                  = "smalldomains"
       application              = "domain-manager"
-      target_group_target_type = "ip"
+      target_group_target_type = "ip",
+      health_check_path        = "/health"
     },
     {
       apex_domain = "small.domains"
@@ -19,7 +20,8 @@ locals {
 
       project                  = "smalldomains"
       application              = "forwarder"
-      target_group_target_type = "lambda"
+      target_group_target_type = "lambda",
+      health_check_path        = "/actuator/health"
     }
     ] :
     {
@@ -30,6 +32,7 @@ locals {
       project                  = a.project
       application              = a.application
       target_group_target_type = a.target_group_target_type
+      health_check_path        = a.health_check_path
     }
   ]
 

@@ -12,7 +12,7 @@ resource "aws_lb_target_group" "target_group" {
     interval            = 30
     timeout             = 5
 
-    path     = "/health"
+    path     = var.health_check_path
     matcher  = "200"
     protocol = "HTTP"
     port     = "traffic-port"
