@@ -47,16 +47,31 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "access_logs" {
 
 data "aws_elb_service_account" "main" {}
 
+# Required policy to allow for putting access logs (https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html)
 data "aws_iam_policy_document" "s3_lb_write" {
   policy_id = "s3_lb_write"
 
   statement {
-    actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.access_logs.id}/${local.s3_objects_common_load_balancer_prefix}/*"]
+    effect = "Allow"
 
     principals {
       identifiers = ["${data.aws_elb_service_account.main.arn}"]
       type        = "AWS"
     }
+
+    actions   = ["s3:PutObject"]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.access_logs.id}/${local.s3_objects_common_load_balancer_prefix}/*"]
+  }
+
+  statement {
+    effect = "Allow"
+
+    principals {
+      identifiers = ["logdelivery.elb.amazonaws.com"]
+      type        = "Service"
+    }
+
+    actions   = ["s3:GetBucketAcl"]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.access_logs.id}"]
   }
 }
