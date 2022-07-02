@@ -7,6 +7,12 @@ resource "aws_lb" "common_lb" {
 
   internal                   = false
   enable_deletion_protection = true
+
+  access_logs {
+    bucket  = aws_s3_bucket.access_logs.id
+    prefix  = local.s3_objects_common_load_balancer_prefix
+    enabled = true
+  }
 }
 
 resource "aws_lb_listener" "http" {
@@ -46,14 +52,16 @@ resource "aws_lb_listener" "https" {
 }
 
 module "listener_rules_for_ip_targets" {
-  for_each = { for a in local.elb_routable_apps : a.fqdn => a if a.target_group_target_type == "ip" }
+  for_each = { for a in local.elb_routable_apps : a.fqdn => a }
   source   = "./alb_listeners_and_target_groups"
 
-  fqdn             = each.key
-  project          = each.value.project
-  application      = each.value.application
-  vpc_id           = data.aws_vpc.default_vpc.id
-  alb_listener_arn = aws_lb_listener.https.arn
+  fqdn                     = each.key
+  project                  = each.value.project
+  application              = each.value.application
+  vpc_id                   = data.aws_vpc.default_vpc.id
+  alb_listener_arn         = aws_lb_listener.https.arn
+  target_group_target_type = each.value.target_group_target_type
+  health_check_path        = each.value.health_check_path
 }
 
 module "all_projects_tls_certificates" {

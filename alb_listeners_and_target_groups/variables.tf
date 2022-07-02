@@ -16,7 +16,6 @@ variable "application" {
 variable "target_group_target_type" {
   type        = string
   description = "The target type for the created target group"
-  default     = "ip"
 
   validation {
     condition     = contains(["ip", "lambda", "instance"], var.target_group_target_type)
@@ -32,4 +31,9 @@ variable "vpc_id" {
 variable "alb_listener_arn" {
   type        = string
   description = "The ARN of the ALB listener we're using to handle all of our hosts"
+}
+
+variable "health_check_path" {
+  type        = string
+  description = "The path to which health checks should be directed"
 }
