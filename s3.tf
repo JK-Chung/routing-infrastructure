@@ -50,11 +50,11 @@ data "aws_elb_service_account" "main" {}
 data "aws_iam_policy_document" "s3_lb_write" {
   policy_id = "s3_lb_write"
 
-  statement = {
+  statement {
     actions   = ["s3:PutObject"]
     resources = ["arn:aws:s3:::${aws_s3_bucket.access_logs.id}/${local.s3_objects_common_load_balancer_prefix}/*"]
 
-    principals = {
+    principals {
       identifiers = ["${data.aws_elb_service_account.main.arn}"]
       type        = "AWS"
     }
