@@ -10,7 +10,7 @@ resource "aws_lb" "common_lb" {
 
   access_logs {
     bucket  = aws_s3_bucket.access_logs.id
-    prefix  = "common-load-balancer"
+    prefix  = local.s3_objects_common_load_balancer_prefix
     enabled = true
   }
 }
