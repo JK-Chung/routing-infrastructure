@@ -21,9 +21,28 @@ resource "aws_s3_bucket_lifecycle_configuration" "access_logs" {
   }
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+resource "aws_s3_bucket_public_access_block" "access_logs" {
   bucket = aws_s3_bucket.access_logs.id
-  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.id
+  policy = data.aws_iam_policy_document.s3_lb_write.json
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
 }
 
 data "aws_elb_service_account" "main" {}
