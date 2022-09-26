@@ -19,7 +19,7 @@ resource "aws_route53_record" "smalldomains_web_app_cloudfront_domain_name" {
 
   alias {
     name                   = data.aws_ssm_parameter.smalldomains_web_app_cloudfront_domain_name.value
-    zone_id                = data.aws_ssm_parameter.smalldomains_web_app_cloudfront_hosted_zone_id
+    zone_id                = data.aws_ssm_parameter.smalldomains_web_app_cloudfront_hosted_zone_id.value
     evaluate_target_health = true
   }
 }
