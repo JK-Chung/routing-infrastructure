@@ -11,3 +11,15 @@ resource "aws_route53_record" "subdomain_alias_records" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_record" "smalldomains_web_app_cloudfront_domain_name" {
+  name    = format("pages.%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")
+  type    = "A"
+  zone_id = data.aws_ssm_parameter.r53_zoneids[format("%ssmall.domains", var.environment == "prod" ? "" : "${var.environment}.")].value
+
+  alias {
+    name                   = data.aws_ssm_parameter.smalldomains_web_app_cloudfront_domain_name.value
+    zone_id                = data.aws_ssm_parameter.smalldomains_web_app_cloudfront_hosted_zone_id
+    evaluate_target_health = true
+  }
+}
