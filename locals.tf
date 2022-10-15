@@ -22,6 +22,15 @@ locals {
       application              = "forwarder"
       target_group_target_type = "lambda",
       health_check_path        = "/actuator/health"
+    },
+    {
+      apex_domain = "john-chung.dev"
+      subdomain   = ""
+
+      project                  = "cross-project"
+      application              = "forwarder"
+      target_group_target_type = "lambda",
+      health_check_path        = "/actuator/health"
     }
     ] :
     {
