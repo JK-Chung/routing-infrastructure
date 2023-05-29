@@ -1,0 +1,13 @@
+name: 'Generate Terravision Diagrams'
+
+on:
+  push:
+
+jobs:
+  generate-terravision-diagrams:
+    name: 'Generate Terravision Diagrams'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Terravision
+      uses: JK-Chung/terravision-actions-s3-deploy@v0-alpha
