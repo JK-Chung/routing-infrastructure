@@ -34,3 +34,11 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
+
+    - name: Terravision
+      uses: JK-Chung/terravision-actions-s3-deploy@v0.0-alpha
+      with:
+        aws-access-key-id: AKIA3O5G5ORPLFTQYAGE
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_AKIA3O5G5ORPLFTQYAGE }}
+        aws-s3-bucket-region: eu-west-1
+        aws-s3-bucket-base-uri: s3://terravision-demo-static-site/terravision-artifacts
